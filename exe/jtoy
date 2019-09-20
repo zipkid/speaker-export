@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'speaker/export'
+
+Speaker::Export.new
+
+# vim:set fileencoding=utf8 fileformat=unix filetype=ruby tabstop=2 expandtab:
