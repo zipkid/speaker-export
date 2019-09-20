@@ -28,7 +28,11 @@ class Speaker
         # puts day
         day['rooms']['Main'].each do |event|
           e = {}
-          e['title'] = event['persons'].first['public_name']
+          title_a = event['persons'].map { |hash| hash['public_name'].downcase }
+          # title = event['persons'].first['public_name'].downcase
+          title = title_a.join(' ')
+          title.gsub! /\s+/, '-'
+          e['title'] = title
           e['type'] = event['type'].downcase
           date = Date.parse(event['date'])
           e['date'] = date
