@@ -26,24 +26,34 @@ class Speaker
       program = []
       @json_data['schedule']['conference']['days'].each do |day|
         # puts day
-        day['rooms']['Main'].each do |event|
-          e = {}
-          title_a = event['persons'].map { |hash| hash['public_name'].downcase }
-          # title = event['persons'].first['public_name'].downcase
-          title = title_a.join(' ')
-          title.gsub! /\s+/, '-'
-          e['title'] = title
-          e['type'] = event['type'].downcase
-          date = Date.parse(event['date'])
-          e['date'] = date
-          starttime = Time.parse(event['date'])
-          e['start_time'] = starttime.strftime('%k:%M').strip
-          duration = Time.parse(event['duration'])
-          duration_hour = duration.strftime('%k').to_i
-          duration_minute = duration.strftime('%M').to_i
-          endtime = starttime + (duration_hour * 3600) + (duration_minute * 60)
-          e['end_time'] = endtime.strftime('%k:%M').strip
-          program << e
+        day['rooms'].each do |room, sched|
+          puts room
+          sched.each do |event|
+            e = {}
+            title_a = event['persons'].map { |hash| hash['public_name'].downcase }
+            # title = event['persons'].first['public_name'].downcase
+            title = title_a.join(' ')
+            title.gsub!(/\s+/, '-')
+            e['title'] = title
+            type = event['type'].downcase
+            puts "\t#{title} - #{type}"
+            if type == 'ignite'
+              e['background_color'] = '#C4FFD7'
+              type = 'talk'
+            end
+            type = 'custom' if type != 'talk'
+            e['type'] = type
+            date = Date.parse(event['date'])
+            e['date'] = date
+            starttime = Time.parse(event['date'])
+            e['start_time'] = starttime.strftime('%k:%M').strip
+            duration = Time.parse(event['duration'])
+            duration_hour = duration.strftime('%k').to_i
+            duration_minute = duration.strftime('%M').to_i
+            endtime = starttime + (duration_hour * 3600) + (duration_minute * 60)
+            e['end_time'] = endtime.strftime('%k:%M').strip
+            program << e
+          end
         end
       end
       @yaml_data['program'] = program
